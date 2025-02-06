@@ -6,6 +6,7 @@ import {
   Slider,
   Button,
   Tooltip,
+  Paper,
   FormGroup,
   FormControlLabel,
   Checkbox,
@@ -16,10 +17,33 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const GeneratePassword = () => {
-  const [darkMode, setDarkMode] = useState(true);
+  const storedTheme = localStorage.getItem("theme");
+  const initialMode = storedTheme ? storedTheme === "dark" : true; // Default to dark mode
+  const [darkMode, setDarkMode] = useState(initialMode);
+
+  const [password, setPassword] = useState<string>("P$S5!WORD!");
+  const [length, setLength] = useState<number>(12);
+  const [includeUppercase, setIncludeUppercase] = useState<boolean>(true);
+  const [includeLowercase, setIncludeLowercase] = useState<boolean>(true);
+  const [includeNumbers, setIncludeNumbers] = useState<boolean>(true);
+  const [includeSymbols, setIncludeSymbols] = useState<boolean>(true);
+
+  const [copied, setCopied] = useState(false);
+  const [shortUrl, setShortUrl] = useState(password);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shortUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
 
   const toggleThemeMode = () => {
     setDarkMode(!darkMode);
+    localStorage.setItem("theme", !darkMode ? "dark" : "light");
   };
 
   const theme = createTheme({
@@ -37,26 +61,31 @@ const GeneratePassword = () => {
       <Container
         sx={{
           display: "flex",
-          justifyContent: "center",
           alignItems: "center",
           height: "100vh",
-          width: "50vw",
-          marginLeft: "50%",
+          marginLeft: "80%",
+          paddingTop: 4,
+          width: "500px",
         }}
       >
         <Container
           maxWidth="sm"
           sx={{
-            backgroundColor: "#1c1c1c",
+            backgroundColor: darkMode ? "#1c1c1c" : "white",
             textAlign: "center",
-            mt: 8,
             p: 4,
             borderRadius: 2,
-            color: "rgb(255 255 255 / 87%)",
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+            color: !darkMode ? "#1c1c1c" : "white",
+            boxShadow: "0px 4px 4px black",
           }}
         >
-          <Typography variant="h5" gutterBottom>
+          <Typography
+            variant="h5"
+            gutterBottom
+            sx={{
+              borderBottom: !darkMode ? "2px solid black" : "2px solid white",
+            }}
+          >
             Password Generator
           </Typography>
           <Box sx={{ mb: 3 }}>
@@ -78,13 +107,23 @@ const GeneratePassword = () => {
             }}
           >
             <Typography variant="h6" sx={{ color: "#fff" }}>
-              P4$5WorD!
+              {password}
             </Typography>
-            <Tooltip title="Copy to clipboard">
-              <Button sx={{ minWidth: "30px" }}>
-                <ContentCopyIcon sx={{ color: "#4caf50" }} />
-              </Button>
-            </Tooltip>
+            <Paper
+              sx={{
+                height: "35px",
+                bgcolor: "#2a2a2a",
+              }}
+              className="copy-box"
+            >
+              <Tooltip title="Copy to clipboard">
+                <Button onClick={handleCopy} sx={{ minWidth: "30px" }}>
+                  <ContentCopyIcon
+                    sx={{ height: "20px", color: "rgb(27 227 0)" }}
+                  />
+                </Button>
+              </Tooltip>
+            </Paper>
           </Box>
 
           <Box
@@ -93,37 +132,29 @@ const GeneratePassword = () => {
             alignItems="center"
           >
             <Typography>Character Length</Typography>
-            <Typography>0</Typography>
+            <Typography>{length}</Typography>
           </Box>
           <Slider
             size="medium"
-            defaultValue={70}
             aria-label="Small"
             valueLabelDisplay="auto"
             sx={{ color: "black" }}
+            onChange={(e: any) => {
+              setLength(e.target.value);
+            }}
           />
 
           <FormGroup>
             <FormControlLabel
               control={<Checkbox />}
               label="Include Uppercase Letters"
-              sx={{ color: "#fff" }}
             />
             <FormControlLabel
               control={<Checkbox />}
               label="Include Lowercase Letters"
-              sx={{ color: "#fff" }}
             />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="Include Numbers"
-              sx={{ color: "#fff" }}
-            />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="Include Symbols"
-              sx={{ color: "#fff" }}
-            />
+            <FormControlLabel control={<Checkbox />} label="Include Numbers" />
+            <FormControlLabel control={<Checkbox />} label="Include Symbols" />
           </FormGroup>
 
           <Box
@@ -131,13 +162,20 @@ const GeneratePassword = () => {
               mt: 3,
               mb: 2,
               p: 1,
-              bgcolor: "#2a2a2a",
+              bgcolor: !darkMode ? "white" : "#2a2a2a",
               borderRadius: 2,
+              borderBottom: "2px solid black",
               display: "flex",
               justifyContent: "space-between",
             }}
           >
-            <Typography>STRENGTH</Typography>
+            <Typography
+              sx={{
+                color: !darkMode ? "#1c1c1c" : "white",
+              }}
+            >
+              STRENGTH
+            </Typography>
             <Typography sx={{ color: "#4caf50", fontWeight: "bold" }}>
               0000
             </Typography>
