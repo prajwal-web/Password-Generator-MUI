@@ -17,9 +17,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const GeneratePassword = () => {
-  const storedTheme = localStorage.getItem("theme");
-  const initialMode = storedTheme ? storedTheme === "dark" : true;
-  const [darkMode, setDarkMode] = useState(initialMode);
+  const [darkMode, setDarkMode] = useState(true);
 
   const [password, setPassword] = useState<string>("P$S5!WORD!");
   const [length, setLength] = useState<number>(12);
@@ -39,7 +37,6 @@ const GeneratePassword = () => {
 
   const toggleThemeMode = () => {
     setDarkMode(!darkMode);
-    localStorage.setItem("theme", !darkMode ? "dark" : "light");
   };
 
   const theme = createTheme({
@@ -62,7 +59,6 @@ const GeneratePassword = () => {
           alignItems: "center",
           justifyContent: "center",
           paddingTop: 4,
-          marginLeft: "80%",
         }}
       >
         <Container
@@ -112,7 +108,7 @@ const GeneratePassword = () => {
               }}
               className="copy-box"
             >
-              <Tooltip title="Copy to clipboard">
+              <Tooltip title="Copied to clipboard">
                 <Button onClick={handleCopy} sx={{ minWidth: "30px" }}>
                   <ContentCopyIcon
                     sx={{ height: "20px", color: "rgb(27 227 0)" }}
