@@ -18,24 +18,20 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const GeneratePassword = () => {
   const storedTheme = localStorage.getItem("theme");
-  const initialMode = storedTheme ? storedTheme === "dark" : true; // Default to dark mode
+  const initialMode = storedTheme ? storedTheme === "dark" : true;
   const [darkMode, setDarkMode] = useState(initialMode);
 
   const [password, setPassword] = useState<string>("P$S5!WORD!");
   const [length, setLength] = useState<number>(12);
-  const [includeUppercase, setIncludeUppercase] = useState<boolean>(true);
-  const [includeLowercase, setIncludeLowercase] = useState<boolean>(true);
-  const [includeNumbers, setIncludeNumbers] = useState<boolean>(true);
-  const [includeSymbols, setIncludeSymbols] = useState<boolean>(true);
-
-  const [copied, setCopied] = useState(false);
-  const [shortUrl, setShortUrl] = useState(password);
+  const [uppercase, setUppercase] = useState<boolean>(true);
+  const [lowercase, setLowercase] = useState<boolean>(true);
+  const [numbers, setNumbers] = useState<boolean>(true);
+  const [symbols, setSymbols] = useState<boolean>(true);
+  const [shortUrl, setUrl] = useState(password);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(shortUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
@@ -59,17 +55,17 @@ const GeneratePassword = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container
+        maxWidth="sm"
         sx={{
           display: "flex",
-          alignItems: "center",
-          height: "100vh",
-          marginLeft: "80%",
-          paddingTop: 4,
           width: "500px",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 4,
+          marginLeft: "80%",
         }}
       >
         <Container
-          maxWidth="sm"
           sx={{
             backgroundColor: darkMode ? "#1c1c1c" : "white",
             textAlign: "center",
@@ -136,11 +132,14 @@ const GeneratePassword = () => {
           </Box>
           <Slider
             size="medium"
+            defaultValue={length}
+            max={50}
             aria-label="Small"
             valueLabelDisplay="auto"
             sx={{ color: "black" }}
             onChange={(e: any) => {
               setLength(e.target.value);
+              console.log(e.target.value);
             }}
           />
 
