@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Box, Container, Typography, Button, Slider } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Slider,
+  ThemeProvider,
+  useTheme,
+} from "@mui/material";
 import PasswordDisplay from "./PasswordDisplay";
 import { usePasswordContext } from "./PasswordProvider";
 import FormGroup from "@mui/material/FormGroup";
@@ -54,6 +62,7 @@ const GeneratePassword = ({
       [key]: !prev[key],
     }));
   };
+  const theme = useTheme();
   return (
     <Container
       maxWidth="sm"
@@ -61,19 +70,22 @@ const GeneratePassword = ({
     >
       <Container
         sx={{
-          backgroundColor: darkMode ? "#121212" : "white",
+          backgroundColor: theme.palette.mode == "dark" ? "#121212" : "white",
           p: 4,
           borderRadius: 2,
           textAlign: "center",
           boxShadow: "0px 4px 4px black",
-          color: darkMode ? "white" : "black",
+          color: theme.palette.mode == "dark" ? "white" : "#121212",
         }}
       >
         <Typography
           variant="h5"
           gutterBottom
           sx={{
-            borderBottom: !darkMode ? "2px solid black" : "2px solid white",
+            borderBottom:
+              theme.palette.mode == "dark"
+                ? "2px solid white"
+                : "2px solid black",
           }}
         >
           Password Generator
@@ -82,7 +94,7 @@ const GeneratePassword = ({
           <FormControlLabel
             control={<Switch />}
             onClick={toggleThemeMode}
-            label={!darkMode ? " Dark Mode" : " Light Mode"}
+            label={theme.palette.mode == "dark" ? " Light Mode" : " Dark Mode"}
           />
         </FormGroup>
 
@@ -100,8 +112,11 @@ const GeneratePassword = ({
           size="medium"
           value={length}
           max={50}
+          sx={{ color: theme.palette.mode == "dark" ? "white" : "black" }}
           valueLabelDisplay="auto"
-          onChange={(e: any) => setLength(e.target.value)}
+          onChange={(e: any, newValue: any) => {
+            setLength(Math.max(newValue, 6));
+          }}
         />
         <Settings options={options} handlecheck={handlecheck} />
 
@@ -110,14 +125,20 @@ const GeneratePassword = ({
             display: "flex",
             justifyContent: "space-between",
             mb: 2,
-            borderBottom: "1px solid white",
-            color: "green",
+            borderBottom:
+              theme.palette.mode == "dark"
+                ? "2px solid white"
+                : "2px solid black",
           }}
         >
-          <Typography sx={{ color: darkMode ? "white" : "white" }}>
+          <Typography
+            sx={{ color: theme.palette.mode == "dark" ? "white" : "black" }}
+          >
             Strength
           </Typography>
-          <Typography>0000</Typography>
+          <Typography sx={{ color: "rgb(27 227 0)", fontWeight: "bold" }}>
+            0000
+          </Typography>
         </Box>
 
         <Button

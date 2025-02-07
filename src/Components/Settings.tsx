@@ -10,7 +10,6 @@ import {
 const Settings = ({ options, handlecheck }: any) => {
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography variant="body1">Character Length: </Typography>
       <FormGroup sx={{ mb: 2 }}>
         <FormControlLabel
           control={<Checkbox checked={options.upperCase} />}
