@@ -5,11 +5,9 @@ import {
   Typography,
   Button,
   Slider,
-  ThemeProvider,
   useTheme,
 } from "@mui/material";
 import PasswordDisplay from "./PasswordDisplay";
-import { usePasswordContext } from "./PasswordProvider";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -50,7 +48,6 @@ const GeneratePassword = ({
     symbols: true,
   });
   console.log(options);
-  const { darkMode } = usePasswordContext();
 
   const handleGeneratePassword = () => {
     const newPassword = generateRandomPassword(length, options);
@@ -74,7 +71,10 @@ const GeneratePassword = ({
           p: 4,
           borderRadius: 2,
           textAlign: "center",
-          boxShadow: "0px 4px 4px black",
+          boxShadow:
+            theme.palette.mode == "dark"
+              ? "  1px 0px 6px 2px rgba(255, 255, 255, 0.6)"
+              : "0px 4px 8px rgba(0, 0, 0, 0.3)",
           color: theme.palette.mode == "dark" ? "white" : "#121212",
         }}
       >
@@ -112,7 +112,7 @@ const GeneratePassword = ({
           size="medium"
           value={length}
           max={50}
-          sx={{ color: theme.palette.mode == "dark" ? "white" : "black" }}
+          sx={{ color: theme.palette.mode == "dark" ? "white" : "yblack" }}
           valueLabelDisplay="auto"
           onChange={(e: any, newValue: any) => {
             setLength(Math.max(newValue, 6));
